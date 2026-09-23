@@ -567,3 +567,52 @@ body {
     margin-top: 0.25rem;
     font-size: 0.8rem;
 }
+
+/* Feature 1: Busca e Filtro de Cardápio */
+.search-card {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.search-form-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.search-field {
+    display: flex;
+    flex-direction: column;
+}
+
+.search-field.flex-grow {
+    flex: 1 1 280px;
+}
+
+.search-field.select-field {
+    flex: 0 1 220px;
+}
+
+.search-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 0.35rem;
+}
+
+.search-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.empty-results {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 2.5rem 1rem;
+    background: #f8fafc;
+    border: 1px dashed var(--border-color);
+    border-radius: var(--radius);
+}

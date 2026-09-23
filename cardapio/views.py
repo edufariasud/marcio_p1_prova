@@ -105,13 +105,37 @@ def fechar_conta(request, comanda_id):
     }
     return render(request, "cardapio/fechar_conta.html", context)
 
+from django.db.models import Q
+
 def cardapio_lista(request):
+    query = request.GET.get("q", "").strip()
+    categoria_filtro = request.GET.get("categoria", "").strip()
+
     pratos = Prato.objects.filter(disponivel=True)
+
+    # Aplicação dos filtros com Q() (Desafio Extra P1)
+    if query and categoria_filtro:
+        pratos = pratos.filter(
+            Q(nome__icontains=query) & Q(categoria=categoria_filtro)
+        )
+    elif query:
+        pratos = pratos.filter(Q(nome__icontains=query))
+    elif categoria_filtro:
+        pratos = pratos.filter(Q(categoria=categoria_filtro))
+
+    filtro_ativo = bool(query or categoria_filtro)
+
+    # Quando não há filtro, manter a separação tradicional por categorias
+    if not filtro_ativo:
+        entradas = pratos.filter(categoria="entrada")
+        principais = pratos.filter(categoria="principal")
+        sobremesas = pratos.filter(categoria="sobremesa")
+        bebidas = pratos.filter(categoria="bebida")
+    else:
+        entradas = principais = sobremesas = bebidas = Prato.objects.none()
+
     combos = Combo.objects.filter(disponivel=True).prefetch_related("pratos")
-    entradas = pratos.filter(categoria="entrada")
-    principais = pratos.filter(categoria="principal")
-    sobremesas = pratos.filter(categoria="sobremesa")
-    bebidas = pratos.filter(categoria="bebida")
+    categorias = Prato.CATEGORIAS
 
     context = {
         "entradas": entradas,
@@ -119,6 +143,11 @@ def cardapio_lista(request):
         "sobremesas": sobremesas,
         "bebidas": bebidas,
         "combos": combos,
+        "query": query,
+        "categoria_filtro": categoria_filtro,
+        "categorias": categorias,
+        "filtro_ativo": filtro_ativo,
+        "pratos_filtrados": pratos if filtro_ativo else None,
     }
     return render(request, "cardapio/cardapio_lista.html", context)
 
