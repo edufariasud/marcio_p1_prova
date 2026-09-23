@@ -76,6 +76,14 @@ class PratoForm(forms.ModelForm):
             "disponivel": forms.CheckboxInput(attrs={"class": "form-check-input"}),
         }
 
+    def clean_preco(self):
+        preco = self.cleaned_data.get("preco")
+        if preco is not None and preco <= 0:
+            raise forms.ValidationError(
+                "O preço do prato deve ser maior que zero (R$ 0,00). Por favor, informe um valor positivo válido."
+            )
+        return preco
+
 class ComboForm(forms.ModelForm):
     class Meta:
         model = Combo
@@ -87,3 +95,11 @@ class ComboForm(forms.ModelForm):
             "pratos": forms.SelectMultiple(attrs={"class": "form-select", "size": 5}),
             "disponivel": forms.CheckboxInput(attrs={"class": "form-check-input"}),
         }
+
+    def clean_preco(self):
+        preco = self.cleaned_data.get("preco")
+        if preco is not None and preco <= 0:
+            raise forms.ValidationError(
+                "O preço do combo deve ser maior que zero (R$ 0,00). Por favor, informe um valor positivo válido."
+            )
+        return preco

@@ -437,6 +437,19 @@ body {
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
+/* Validações de Formulário */
+.errorlist {
+    list-style: none;
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 0.5rem;
+    background-color: #fee2e2;
+    border: 1px solid #fecaca;
+    border-radius: var(--radius);
+    color: var(--danger);
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
 /* Comanda Page Grid */
 .comanda-header {
     display: flex;
