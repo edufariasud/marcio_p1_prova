@@ -27,6 +27,22 @@ Este projeto implementa o MVP funcional completo do sistema de **Cardápio Digit
 
 ---
 
+## 🎯 Features Obrigatórias da P1 (Documento Complementar)
+
+Conforme as instruções complementares da avaliação P1 (Prof. Márcio Garrido), foram implementadas as duas features adicionais integradas ao fluxo operacional:
+
+### Feature 1 — Busca e Filtro na Listagem do Cardápio
+- **O que foi implementado:** Na tela `/cardapio/`, foi adicionada uma barra com busca textual por nome do prato (`icontains`) e filtro seletivo por categoria (`<select>`). O estado dos filtros é preservado no formulário (`request.GET.q` e `request.GET.categoria`) e os dois filtros operam tanto de forma isolada quanto combinada. Quando não há resultados, uma mensagem amigável é exibida através do bloco `{% empty %}`.
+- **Desafio Extra:** Foi aplicada a composição de filtros na mesma consulta via objeto `Q()` do Django (`Q(nome__icontains=query) & Q(categoria=categoria_filtro)`), otimizando a consulta direta ao banco de dados.
+
+### Feature 2 — Validação Customizada no ModelForm
+- **O que foi implementado:** No formulário de cadastro de pratos ([`PratoForm`](file:///c:/Users/ALUNO/Desktop/marcio/cardapio/forms.py)), foi sobrescrito o método `clean_preco()`. A regra de negócio exige que o preço do prato seja estritamente superior a zero (`preco <= 0`). Caso o usuário tente cadastrar um prato gratuito ou com valor negativo, o formulário bloqueia a submissão e levanta um `forms.ValidationError` exibido com destaque visual via `{{ form.as_p }}` e CSS dedicado. A mesma regra foi estendida para o [`ComboForm`](file:///c:/Users/ALUNO/Desktop/marcio/cardapio/forms.py).
+
+### 📝 Parágrafo Justificativo para o Relatório P1
+> *"Para a **Feature 1**, escolhemos o campo `nome` do prato com `icontains` e a `categoria` em um `<select>`, combinando ambos através de `Q()` do Django. Essa escolha se justifica porque em um salão ou atendimento dinâmico, o garçom ou cliente precisa localizar rapidamente itens específicos (ex: 'Filé') ou restringir a consulta apenas a um grupo de interesse (ex: 'Bebidas') sem navegar por todo o cardápio. Para a **Feature 2**, implementamos a validação de domínio `clean_preco()` no `PratoForm`, garantindo que o preço seja estritamente maior que zero. Em um sistema comercial de restaurante, pratos com valor zerado ou negativo corromperiam o fechamento de comandas, o faturamento do salão e o cálculo da taxa de serviço de 10%, caracterizando um erro grave de integridade financeira."*
+
+---
+
 ## 🚀 2. Como Executar o Projeto
 
 ### Pré-requisitos
