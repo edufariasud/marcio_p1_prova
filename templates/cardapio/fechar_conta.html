@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Fechar Conta — Comanda #{{ comanda.id }}{% endblock %}
+
+{% block content %}
+<div class="fechamento-container card p-4">
+    <h2>Fechamento de Conta — Mesa {{ comanda.mesa.numero }}</h2>
+    <p class="subtitle">Confira os valores consumidos antes de finalizar e liberar a mesa.</p>
+
+    <div class="resumo-box mt-3">
+        <h4>Resumo da Comanda #{{ comanda.id }}</h4>
+        <p>Abertura: {{ comanda.data_abertura|date:"d/m/Y H:i" }} | Cliente: {{ comanda.cliente_nome|default:"Não informado" }}</p>
+
+        <table class="table mt-3">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Qtd</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in itens %}
+                <tr>
+                    <td>{% if item.prato %}{{ item.prato.nome }}{% else %}[Combo] {{ item.combo.nome }}{% endif %}</td>
+                    <td>{{ item.quantidade }}</td>
+                    <td>R$ {{ item.subtotal|floatformat:2 }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="fechamento-totais mt-4">
+            <div class="linha-total">
+                <span>Subtotal Consumido:</span>
+                <strong>R$ {{ total|floatformat:2 }}</strong>
+            </div>
+            <div class="linha-total text-muted">
+                <span>Taxa de Serviço Sugerida (10%):</span>
+                <span>R$ {{ taxa_servico|floatformat:2 }}</span>
+            </div>
+            <div class="linha-total total-final">
+                <span>Total Geral c/ Taxa:</span>
+                <span class="destaque">R$ {{ total_com_taxa|floatformat:2 }}</span>
+            </div>
+        </div>
+    </div>
+
+    <form method="post" class="mt-4 d-flex gap-2">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-success btn-lg">
+            ✓ Confirmar Fechamento e Liberar Mesa
+        </button>
+        <a href="{% url 'comanda_detalhes' comanda.id %}" class="btn btn-outline btn-lg">
+            Cancelar / Voltar
+        </a>
+    </form>
+</div>
+{% endblock %}

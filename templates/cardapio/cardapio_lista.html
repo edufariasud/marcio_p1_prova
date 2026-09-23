@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}Cardápio do Restaurante{% endblock %}
+
+{% block content %}
+<div class="dashboard-header">
+    <div>
+        <h2>Cardápio & Combos</h2>
+        <p class="subtitle">Visão completa dos itens e pratos disponíveis para pedido.</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a href="{% url 'novo_prato' %}" class="btn btn-outline">+ Novo Prato</a>
+        <a href="{% url 'novo_combo' %}" class="btn btn-primary">+ Novo Combo</a>
+    </div>
+</div>
+
+{% if combos %}
+<section class="section">
+    <h3>🔥 Combos Promocionais</h3>
+    <div class="cardapio-grid">
+        {% for combo in combos %}
+        <div class="cardapio-item combo-card">
+            <div class="item-header">
+                <h4>{{ combo.nome }}</h4>
+                <span class="preco-tag">R$ {{ combo.preco|floatformat:2 }}</span>
+            </div>
+            <p class="item-desc">{{ combo.descricao }}</p>
+            <div class="combo-pratos">
+                <small><strong>Inclui:</strong></small>
+                <ul>
+                    {% for p in combo.pratos.all %}
+                        <li>{{ p.nome }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+<section class="section mt-4">
+    <h3>🥗 Pratos por Categoria</h3>
+
+    <h4 class="cat-title">Entradas</h4>
+    <div class="cardapio-grid mb-3">
+        {% for prato in entradas %}
+        <div class="cardapio-item">
+            <div class="item-header">
+                <h4>{{ prato.nome }}</h4>
+                <span class="preco-tag">R$ {{ prato.preco|floatformat:2 }}</span>
+            </div>
+            <p class="item-desc">{{ prato.descricao }}</p>
+        </div>
+        {% empty %}
+            <p class="text-muted">Nenhuma entrada cadastrada.</p>
+        {% endfor %}
+    </div>
+
+    <h4 class="cat-title">Pratos Principais</h4>
+    <div class="cardapio-grid mb-3">
+        {% for prato in principais %}
+        <div class="cardapio-item">
+            <div class="item-header">
+                <h4>{{ prato.nome }}</h4>
+                <span class="preco-tag">R$ {{ prato.preco|floatformat:2 }}</span>
+            </div>
+            <p class="item-desc">{{ prato.descricao }}</p>
+        </div>
+        {% empty %}
+            <p class="text-muted">Nenhum prato principal cadastrado.</p>
+        {% endfor %}
+    </div>
+
+    <h4 class="cat-title">Sobremesas</h4>
+    <div class="cardapio-grid mb-3">
+        {% for prato in sobremesas %}
+        <div class="cardapio-item">
+            <div class="item-header">
+                <h4>{{ prato.nome }}</h4>
+                <span class="preco-tag">R$ {{ prato.preco|floatformat:2 }}</span>
+            </div>
+            <p class="item-desc">{{ prato.descricao }}</p>
+        </div>
+        {% empty %}
+            <p class="text-muted">Nenhuma sobremesa cadastrada.</p>
+        {% endfor %}
+    </div>
+
+    <h4 class="cat-title">Bebidas</h4>
+    <div class="cardapio-grid mb-3">
+        {% for prato in bebidas %}
+        <div class="cardapio-item">
+            <div class="item-header">
+                <h4>{{ prato.nome }}</h4>
+                <span class="preco-tag">R$ {{ prato.preco|floatformat:2 }}</span>
+            </div>
+            <p class="item-desc">{{ prato.descricao }}</p>
+        </div>
+        {% empty %}
+            <p class="text-muted">Nenhuma bebida cadastrada.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

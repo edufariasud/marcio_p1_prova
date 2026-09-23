@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}Salão de Mesas — Cardápio Digital{% endblock %}
+
+{% block content %}
+<div class="dashboard-header">
+    <div>
+        <h2>Painel do Salão & Mesas</h2>
+        <p class="subtitle">Monitore o status das mesas e comandas ativas em tempo real.</p>
+    </div>
+    <div class="stats-cards">
+        <div class="stat-card">
+            <span class="stat-number">{{ mesas_livres }}</span>
+            <span class="stat-label">Mesas Livres</span>
+        </div>
+        <div class="stat-card stat-occupied">
+            <span class="stat-number">{{ mesas_ocupadas }}</span>
+            <span class="stat-label">Mesas Ocupadas</span>
+        </div>
+        <div class="stat-card stat-total">
+            <span class="stat-number">{{ total_abertas }}</span>
+            <span class="stat-label">Comandas Abertas</span>
+        </div>
+    </div>
+</div>
+
+<section class="section">
+    <div class="section-title-bar">
+        <h3>Mesas do Estabelecimento</h3>
+        <a href="{% url 'abrir_comanda' %}" class="btn btn-primary">+ Nova Comanda</a>
+    </div>
+
+    <div class="mesas-grid">
+        {% for mesa in mesas %}
+            <div class="mesa-card mesa-{{ mesa.status }}">
+                <div class="mesa-header">
+                    <h4>Mesa {{ mesa.numero }}</h4>
+                    <span class="badge badge-{{ mesa.status }}">{{ mesa.get_status_display }}</span>
+                </div>
+                <p class="mesa-info">Capacidade: <strong>{{ mesa.capacidade }} pessoas</strong></p>
+
+                {% if mesa.status == "livre" %}
+                    <a href="{% url 'abrir_comanda_mesa' mesa.id %}" class="btn btn-outline btn-block mt-2">
+                        Abrir Comanda
+                    </a>
+                {% elif mesa.status == "ocupada" %}
+                    {% for c in mesa.comandas.all %}
+                        {% if c.status == "aberta" %}
+                            <div class="mesa-comanda-box">
+                                <p><strong>Comanda #{{ c.id }}</strong></p>
+                                {% if c.cliente_nome %}<p class="small text-muted">{{ c.cliente_nome }}</p>{% endif %}
+                                <p class="mesa-valor">Total: <strong>R$ {{ c.total_consumo|floatformat:2 }}</strong></p>
+                                <a href="{% url 'comanda_detalhes' c.id %}" class="btn btn-sm btn-dark btn-block">
+                                    Ver Pedidos / Fechar
+                                </a>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            </div>
+        {% empty %}
+            <p>Nenhuma mesa cadastrada. Adicione mesas no Django Admin.</p>
+        {% endfor %}
+    </div>
+</section>
+
+{% if comandas_abertas %}
+<section class="section mt-4">
+    <h3>Comandas em Atendimento</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Mesa</th>
+                <th>Cliente</th>
+                <th>Abertura</th>
+                <th>Total Atual</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in comandas_abertas %}
+            <tr>
+                <td><strong>#{{ c.id }}</strong></td>
+                <td>Mesa {{ c.mesa.numero }}</td>
+                <td>{{ c.cliente_nome|default:"Balcão / Mesa" }}</td>
+                <td>{{ c.data_abertura|date:"d/m H:i" }}</td>
+                <td><strong>R$ {{ c.total_consumo|floatformat:2 }}</strong></td>
+                <td>
+                    <a href="{% url 'comanda_detalhes' c.id %}" class="btn btn-sm btn-outline">Gerenciar Itens</a>
+                    <a href="{% url 'fechar_conta' c.id %}" class="btn btn-sm btn-danger">Fechar Conta</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endif %}
+{% endblock %}

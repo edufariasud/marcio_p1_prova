@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Cardápio Digital — Restaurante{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header class="header">
+        <div class="container header-container">
+            <div class="brand">
+                <span class="brand-logo">🍽️</span>
+                <div>
+                    <h1 class="brand-title">Cardápio Digital & Salão</h1>
+                    <p class="brand-student">Aluno: Eduardo Augusto Figueiredo de Faria • Matrícula: 202413235</p>
+                </div>
+            </div>
+            <nav class="nav">
+                <a href="{% url 'index' %}" class="nav-link">🪑 Mesas & Salão</a>
+                <a href="{% url 'cardapio_lista' %}" class="nav-link">📜 Cardápio & Combos</a>
+                <a href="{% url 'abrir_comanda' %}" class="btn btn-primary btn-sm">+ Abrir Comanda</a>
+                <a href="/admin/" target="_blank" class="nav-link nav-admin">⚙️ Admin</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container main-content">
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-content">
+            <p>Laboratório de Programação Full Stack — Avaliação P1 (MVP Funcional)</p>
+            <p class="footer-sub">Professor: Márcio Garrido | Projeto: Cardápio Digital (Opção 9)</p>
+        </div>
+    </footer>
+</body>
+</html>
